@@ -1,0 +1,261 @@
+CREATE SCHEMA `learn` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+CREATE TABLE `learn`.`permissions` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `title` BIGINT NOT NULL,
+  `slug` VARCHAR(100) NULL,
+  `description` TINYTEXT,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+CREATE TABLE `learn`.`users` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `permission_id` BIGINT NOT NULL,
+  `full_name` VARCHAR(200) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(32) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `credits` FLOAT NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP NULL,
+
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `uq_email` (`email` ASC),
+  FOREIGN KEY (`permission_id`)
+  REFERENCES `learn`.`permissions` (`id`));
+
+
+CREATE TABLE `learn`.`courses` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NOT NULL,
+  `title` VARCHAR(75) NOT NULL,
+  `slug` VARCHAR(100) NOT NULL,
+  `price` FLOAT NOT NULL DEFAULT 0,
+  `discount` FLOAT NOT NULL DEFAULT 0,
+  `quantity` SMALLINT(6) NOT NULL DEFAULT 0,
+  `long_description` TEXT NULL DEFAULT NULL,
+  `short_description` TEXT NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `createdAt` TIMESTAMP NOT NULL,
+  `updatedAt` TIMESTAMP NULL DEFAULT NULL,
+
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `uq_slug` (`slug` ASC),
+  INDEX `idx_course_user` (`userId` ASC),
+  CONSTRAINT `fk_course_user`
+    FOREIGN KEY (`userId`)
+    REFERENCES `learn`.`users` (`id`));
+
+
+CREATE TABLE `learn`.`resources` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `courseId` BIGINT NOT NULL,
+  `title` VARCHAR(75) NOT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `createdAt` TIMESTAMP NOT NULL,
+  `updatedAt` TIMESTAMP NULL DEFAULT NULL,
+
+  PRIMARY KEY (`id`),
+  INDEX `idx_course_id` (`courseId` ASC),
+  CONSTRAINT `fk_course`
+    FOREIGN KEY (`courseId`)
+    REFERENCES `learn`.`courses` (`id`));
+
+    CREATE TABLE `learn`.`categories` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `parentId` BIGINT NULL DEFAULT NULL,
+      `title` VARCHAR(75) NOT NULL,
+      `slug` VARCHAR(100) NOT NULL,
+      PRIMARY KEY (`id`));
+
+    ALTER TABLE `learn`.`categories`
+    ADD INDEX `idx_category_parent` (`parentId` ASC);
+    ALTER TABLE `learn`.`categories`
+    ADD CONSTRAINT `fk_category_parent`
+      FOREIGN KEY (`parentId`)
+      REFERENCES `learn`.`categories` (`id`);
+
+
+    CREATE TABLE `learn`.`languages` (
+      `id` BIGINT NOT NULL AUTO_INCREMENT,
+      `name` VARCHAR(20) NOT NULL,
+      PRIMARY KEY (`id`));
+
+
+CREATE TABLE `learn`.`courses_categories` (
+  `courseId` BIGINT NOT NULL,
+  `categoryId` BIGINT NOT NULL,
+  PRIMARY KEY (`courseId`, `categoryId`),
+  INDEX `idx_pc_category` (`categoryId` ASC),
+  INDEX `idx_pc_course` (`courseId` ASC),
+  CONSTRAINT `fk_pc_course`
+    FOREIGN KEY (`courseId`)
+    REFERENCES `learn`.`courses` (`id`),
+  CONSTRAINT `fk_pc_category`
+    FOREIGN KEY (`categoryId`)
+    REFERENCES `learn`.`categories` (`id`)
+);
+
+
+CREATE TABLE `learn`.`carts` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NULL DEFAULT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_cart_user` (`userId` ASC),
+  CONSTRAINT `fk_cart_user`
+    FOREIGN KEY (`userId`)
+    REFERENCES `learn`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `learn`.`carts_courses` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `courseId` BIGINT NOT NULL,
+  `cartId` BIGINT NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_cart_course` (`courseId` ASC),
+  CONSTRAINT `fk_cart_courseId`
+    FOREIGN KEY (`courseId`)
+    REFERENCES `learn`.`courses` (`id`)
+);
+
+ALTER TABLE `learn`.`carts_courses`
+ADD INDEX `idx_cart_item_cart` (`cartId` ASC);
+ALTER TABLE `learn`.`carts_courses`
+ADD CONSTRAINT `fk_cart_course_cart`
+  FOREIGN KEY (`cartId`)
+  REFERENCES `learn`.`carts` (`id`);
+
+CREATE TABLE `learn`.`orders` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NULL DEFAULT NULL,
+  `subTotal` FLOAT NOT NULL DEFAULT 0,
+  `courseDiscount` FLOAT NOT NULL DEFAULT 0,
+  `tax` FLOAT NOT NULL DEFAULT 0,
+  `shipping` FLOAT NOT NULL DEFAULT 0,
+  `total` FLOAT NOT NULL DEFAULT 0,
+  `coupon` VARCHAR(50) NULL DEFAULT NULL,
+  `discount` FLOAT NOT NULL DEFAULT 0,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_order_user` (`userId` ASC),
+  CONSTRAINT `fk_order_user`
+    FOREIGN KEY (`userId`)
+    REFERENCES `learn`.`users` (`id`)
+);
+
+
+
+CREATE TABLE `learn`.`orders_courses` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `orderId` BIGINT NOT NULL,
+  `courseId` BIGINT NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_order_course`
+    FOREIGN KEY (`courseId`)
+    REFERENCES `learn`.`courses` (`id`));
+
+ALTER TABLE `learn`.`orders_courses`
+ADD INDEX `idx_order_course_order` (`orderId` ASC);
+ALTER TABLE `learn`.`orders_courses`
+ADD CONSTRAINT `fk_order_course_order`
+  FOREIGN KEY (`orderId`)
+  REFERENCES `learn`.`orders` (`id`)
+;
+
+
+CREATE TABLE `learn`.`transactions` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NOT NULL,
+  `orderId` BIGINT NOT NULL,
+  `transaction_id` VARCHAR(100) NOT NULL,
+  `type` SMALLINT(6) NOT NULL DEFAULT 0,
+  `mode` SMALLINT(6) NOT NULL DEFAULT 0,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_transaction_user` (`userId` ASC),
+  CONSTRAINT `fk_transaction_user`
+    FOREIGN KEY (`userId`)
+    REFERENCES `learn`.`users` (`id`)
+);
+
+ALTER TABLE `learn`.`transactions`
+ADD INDEX `idx_transaction_order` (`orderId` ASC);
+ALTER TABLE `learn`.`transactions`
+ADD CONSTRAINT `fk_transaction_order`
+  FOREIGN KEY (`orderId`)
+  REFERENCES `learn`.`orders` (`id`);
+
+
+  CREATE TABLE `learn`.`reviews` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `courseId` BIGINT NOT NULL,
+    `userId` BIGINT NOT NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `rating` SMALLINT(6) NOT NULL DEFAULT 0,
+    `createdAt` DATETIME NOT NULL,
+    `publishedAt` DATETIME NULL DEFAULT NULL,
+    `content` TEXT NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `idx_review_course` (`courseId` ASC),
+    INDEX `idx_review_user` (`userId` ASC),
+    CONSTRAINT `fk_review_course`
+      FOREIGN KEY (`courseId`)
+      REFERENCES `learn`.`courses` (`id`),
+          CONSTRAINT `fk_review_user`
+            FOREIGN KEY (`userId`)
+            REFERENCES `learn`.`users` (`id`));
+
+  CREATE TABLE `learn`.`tags` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(100) NOT NULL,
+    `createdAt` DATETIME NOT NULL,
+    `updatedAt` DATETIME DEFAULT NULL,
+    `content` TEXT NULL DEFAULT NULL,
+    PRIMARY KEY (`id`));
+
+
+  CREATE TABLE `learn`.`tags_courses` (
+    `tagId` BIGINT NOT NULL,
+    `courseId` BIGINT NOT NULL,
+    `createdAt` DATETIME NOT NULL,
+    `updatedAt` DATETIME DEFAULT NULL,
+    `content` TEXT NULL DEFAULT NULL,
+    CONSTRAINT `fk_course`
+      FOREIGN KEY (`courseId`)
+      REFERENCES `learn`.`courses` (`id`),
+      CONSTRAINT `fk_tag`
+      FOREIGN KEY (`tagId`)
+      REFERENCES `learn`.`tags` (`id`));
+
+
+CREATE TABLE `learn`.`tags_categories` (
+    `tagId` BIGINT NOT NULL,
+    `categoryId` BIGINT NOT NULL,
+    `createdAt` DATETIME NOT NULL,
+    `updatedAt` DATETIME DEFAULT NULL,
+    `content` TEXT NULL DEFAULT NULL,
+    CONSTRAINT `fk_course`
+      FOREIGN KEY (`categoryId`)
+      REFERENCES `learn`.`categories` (`id`),
+      CONSTRAINT `fk_tag`
+      FOREIGN KEY (`tagId`)
+      REFERENCES `learn`.`tags` (`id`));
