@@ -13,5 +13,8 @@ Route::group([
     Route::post('register', 'Auth\AuthController@register');
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::post('me', 'Auth\AuthController@me');
+//Employee
+    Route::post('index', 'API\EmployeeController@index');
+
 
 });

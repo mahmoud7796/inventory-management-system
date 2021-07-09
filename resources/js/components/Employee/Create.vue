@@ -114,8 +114,11 @@ export default {
             form:{
                 name:null,
                 email:null,
-                password:null,
-                password_confirmation:null
+                address:null,
+                date:null,
+                nid:null,
+                phone:null,
+                photo:null,
             },
             errors:{
 
