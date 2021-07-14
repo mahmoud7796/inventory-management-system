@@ -13,11 +13,12 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Add Employee</h1>
                                     </div>
-                                    <form @submit.prevent="empInsert" enctype="multipart/form-data">
+                                    <form @submit.prevent="empUpdate" enctype="multipart/form-data">
+
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-md-6">
-                                                    <input v-model="form.name" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Full Name">
+                                                    <input v-model="form.name"  type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Full Name">
                                                     <small class="text-danger" v-if="errors.name">{{errors.name[0]}}</small>
                                                 </div>
 
@@ -79,7 +80,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-block">Save</button>
+                                            <button type="submit" class="btn btn-primary btn-block">Update</button>
                                         </div>
                                         <hr>
                                     </form>
@@ -101,21 +102,26 @@
 <script>
 export default {
     created(){
-        if(!User.loggedIn()){
+        if (!User.loggedIn()) {
             this.$router.push({name: '/'})
         }
+        let id = this.$route.params.id;
+        axios.get('/api/edit/'+id)
+            .then(({data}) => (this.form = data))
+            .catch()
     },
     data(){
         return {
             form:{
-                name:null,
-                email:null,
-                address:null,
-                date:null,
-                nid:null,
-                salary:null,
-                phone:null,
-                photo:null,
+                name:'',
+                email:'',
+                address:'',
+                date:'',
+                nid:'',
+                salary:'',
+                phone:'',
+                photo:'',
+                newPhoto:'',
             },
             errors:{
 
@@ -130,20 +136,20 @@ export default {
             }else{
                 let reader = new FileReader();
                 reader.onload = event =>{
-                    this.form.photo = event.target.result;
-                     console.log(event.target.result);
+                    this.form.newPhoto = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }
             },
-        empInsert(){
-            axios.post('api/store',this.form)
+        empUpdate(){
+            let id = this.$route.params.id;
+            axios.post('/api/update/'+id,this.form)
             .then(() =>{
                 this.$router.push({name: '/all-employee'})
                 Notification.success()
             })
             .catch(error => this.errors = error.response.data.errors)
-
+            console.log(event.target.result)
         },
     }
 

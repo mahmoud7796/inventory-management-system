@@ -1,14 +1,14 @@
-class Notification{
-    success(){
+class Notification {
+    success() {
         new Noty({
-           type: 'success',
+            type: 'success',
             layout: 'topRight',
             text: 'Successfully Done',
             timeout: 1000,
-    }).show();
+        }).show();
     }
 
-    alert(){
+    alert() {
         new Noty({
             type: 'alert',
             layout: 'topRight',
@@ -17,7 +17,7 @@ class Notification{
         }).show();
     }
 
-    error(){
+    error() {
         new Noty({
             type: 'error',
             layout: 'topRight',
@@ -26,12 +26,22 @@ class Notification{
         }).show();
     }
 
-    warning(){
+    warning() {
         new Noty({
             type: 'warning',
             layout: 'topRight',
             text: 'Opps Wrong !',
             timeout: 1000,
+        }).show();
+    }
+
+    image_validation()
+    {
+        new Noty({
+            type: 'error',
+            layout: 'topRight',
+            text: 'The Image Must Be Less Than 1M',
+            timeout: 2000,
         }).show();
     }
 

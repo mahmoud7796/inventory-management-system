@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Image;
 use Illuminate\Http\Request;
 
-class EmployeeController extends Controller
+class SupplierController extends Controller
 {
     use General;
     public function index(){
