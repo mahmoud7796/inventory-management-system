@@ -65,6 +65,34 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap2"
+                   aria-expanded="true" aria-controls="collapseBootstrap2">
+                    <i class="far fa-fw fa-window-maximize"></i>
+                    <span>Categories</span>
+                </a>
+                <div id="collapseBootstrap2" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <router-link to="/create-category" class="collapse-item">Add Category</router-link>
+                        <router-link to="/all-category" class="collapse-item" >All Categories</router-link>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap3"
+                   aria-expanded="true" aria-controls="collapseBootstrap3">
+                    <i class="far fa-fw fa-window-maximize"></i>
+                    <span>Products</span>
+                </a>
+                <div id="collapseBootstrap3" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <router-link to="/create-product" class="collapse-item">Add Products</router-link>
+                        <router-link to="/all-product" class="collapse-item" >All Products</router-link>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="forms.html">
                     <i class="fab fa-fw fa-wpforms"></i>
                     <span>Forms</span>
@@ -317,7 +345,15 @@
                 <!---Container Fluid-->
             </div>
             <!-- Footer -->
-            <div>Copy right</div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+            <span>copyright &copy; <script> document.write(new Date().getFullYear()); </script> - developed by
+              <b><a href="https://github.com/mahmoud7796/" target="_blank">@Mahmoud</a></b>
+            </span>
+                    </div>
+                </div>
+            </footer>
             <!-- Footer -->
         </div>
     </div>

@@ -16,8 +16,17 @@ let indexSup = require('./components/Supplier/index.vue').default;
 let editSup = require('./components/Supplier/edit.vue').default;
 //End Supplier
 
+//Start category
+let createCat = require('./components/Category/create.vue').default;
+let indexCat = require('./components/Category/index.vue').default;
+let editCat = require('./components/Category/edit.vue').default;
+//End category
 
-
+//Start category
+let createPro = require('./components/products/create.vue').default;
+let indexPro = require('./components/products/index.vue').default;
+let editPro = require('./components/products/edit.vue').default;
+//End category
 
 export const  routes = [
     {path: '/', component: login, name: '/'},
@@ -35,5 +44,16 @@ export const  routes = [
     {path: '/create-supplier', component: createSup, name: '/create-supplier'},
     {path: '/all-supplier', component: indexSup, name: '/all-supplier'},
     {path: '/edit-supplier/:id', component: editSup, name: '/edit-supplier'},
+
+    //Categories
+    {path: '/create-category', component: createCat, name: '/create-category'},
+    {path: '/all-category', component: indexCat, name: '/all-category'},
+    {path: '/edit-category/:id', component: editCat, name: '/edit-category'},
+
+    //Products
+    {path: '/create-product', component: createPro, name: '/create-product'},
+    {path: '/all-product', component: indexPro, name: '/all-product'},
+    {path: '/edit-product/:id', component: editPro, name: '/edit-product'},
+
 
 ]

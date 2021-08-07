@@ -1,7 +1,7 @@
 <template>
     <div class="create" >
         <div class="row" style="padding: 8px">
-            <router-link to="/all-employee" class="btn btn-primary">All Employee</router-link>
+            <router-link to="/all-supplier" class="btn btn-primary">All Supplier</router-link>
         </div>
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
@@ -11,15 +11,15 @@
                             <div class="col-lg-12">
                                 <div class="login-form">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Add Employee</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Edit Supplier</h1>
                                     </div>
-                                    <form @submit.prevent="empUpdate" enctype="multipart/form-data">
+                                    <form @submit.prevent="supUpdate" enctype="multipart/form-data">
 
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-md-6">
-                                                    <input v-model="form.name"  type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Full Name">
-                                                    <small class="text-danger" v-if="errors.name">{{errors.name[0]}}</small>
+                                                    <input v-model="form.shop_name"  type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Shop Name">
+                                                    <small class="text-danger" v-if="errors.sho_name">{{errors.sho_name[0]}}</small>
                                                 </div>
 
                                                 <div class="col-md-6">
@@ -28,32 +28,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-md-6">
-                                                    <input v-model="form.address" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Address">
-                                                    <small class="text-danger" v-if="errors.address">{{errors.address[0]}}</small>
-                                                </div>
 
-                                                <div class="col-md-6">
-                                                    <input v-model="form.salary" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Salary">
-                                                    <small class="text-danger" v-if="errors.salary">{{errors.salary[0]}}</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-md-6">
-                                                    <input v-model="form.date" type="date" class="form-control" id="exampleInputFirstName">
-                                                    <small class="text-danger" v-if="errors.date">{{errors.date[0]}}</small>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <input v-model="form.nid" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Nid">
-                                                    <small class="text-danger" v-if="errors.nid">{{errors.nid[0]}}</small>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-md-6">
@@ -106,19 +81,15 @@ export default {
             this.$router.push({name: '/'})
         }
         let id = this.$route.params.id;
-        axios.get('/api/edit/'+id)
+        axios.get('/api/sup-edit/'+id)
             .then(({data}) => (this.form = data))
             .catch()
     },
     data(){
         return {
             form:{
-                name:'',
+                shop_name:'',
                 email:'',
-                address:'',
-                date:'',
-                nid:'',
-                salary:'',
                 phone:'',
                 photo:'',
                 newPhoto:'',
@@ -141,11 +112,11 @@ export default {
                 reader.readAsDataURL(file);
             }
             },
-        empUpdate(){
+        supUpdate(){
             let id = this.$route.params.id;
-            axios.post('/api/update/'+id,this.form)
+            axios.post('/api/sup-update/'+id,this.form)
             .then(() =>{
-                this.$router.push({name: '/all-employee'})
+                this.$router.push({name: '/all-supplier'})
                 Notification.success()
             })
             .catch(error => this.errors = error.response.data.errors)

@@ -6,9 +6,7 @@ use App\Http\Requests\EmployeeRequest;
 use App\Models\Employee;
 use App\Http\Controllers\Controller;
 use App\Traits\General;
-use Illuminate\Support\Facades\DB;
 use Image;
-use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
@@ -16,9 +14,6 @@ class EmployeeController extends Controller
     public function index(){
         $emp = Employee::all();
         return response()->json($emp);
-    }
-    public function create(){
-
     }
 
     public function store(EmployeeRequest $request){

@@ -2,37 +2,29 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\EmployeeRequest;
-use App\Models\Employee;
+use App\Http\Requests\SupplierRequest;
+use App\Models\Supplier;
 use App\Http\Controllers\Controller;
 use App\Traits\General;
-use Illuminate\Support\Facades\DB;
 use Image;
-use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
     use General;
     public function index(){
-        $emp = Employee::all();
-        return response()->json($emp);
-    }
-    public function create(){
-
+        $sup = Supplier::all();
+        return response()->json($sup);
     }
 
-    public function store(EmployeeRequest $request){
+    public function store(SupplierRequest $request){
 //save Image
-    $photo = $this ->SaveImage($request->photo,'/backend/employee/',200,200);
+    $photo = $this ->SaveImage($request->photo,'/backend/supplier/',200,200);
 
-        Employee::create([
-            'name' => $request-> name,
+        Supplier::create([
+            'shop_name' => $request-> shop_name,
             'email' => $request-> email,
             'phone' => $request-> phone,
-            'nid' => $request-> nid,
             'address' => $request-> address,
-            'date' => $request-> date,
-            'salary' => $request-> salary,
             'photo' =>  $photo
         ]);
 
@@ -40,38 +32,35 @@ class SupplierController extends Controller
 
     public function delete($id)
     {
-        $employee = Employee::where('id', $id)->first();
-        $photo = $employee->photo;
+        $Supplier = Supplier::where('id', $id)->first();
+        $photo = $Supplier->photo;
         $img = public_path().$photo;
         if ($photo) {
             unlink($img);
         }
-        $employee->delete();
+        $Supplier->delete();
     }
 
     public function edit($id){
-        $emp = Employee::where('id',$id)-> first();
-        return response()->json($emp);
+        $sup = Supplier::where('id',$id)-> first();
+        return response()->json($sup);
 
     }
 
-    public function update($id, EmployeeRequest $request){
-        $emp = Employee::where('id',$id)-> first();
+    public function update($id, SupplierRequest $request){
+        $sup = Supplier::where('id',$id)-> first();
         if($request -> has('newPhoto')){
-            $photo = $this ->SaveImage($request->newPhoto,'/backend/employee/',200,200);
-            unlink(public_path().$emp->photo);
-            $emp-> update([
+            $photo = $this ->SaveImage($request->newPhoto,'/backend/Supplier/',200,200);
+            unlink(public_path().$sup->photo);
+            $sup-> update([
                 'photo' =>  $photo,
             ]);
         }
-            $emp-> update([
-                'name' => $request-> name,
-                'email' => $request-> email,
-                'phone' => $request-> phone,
-                'nid' => $request-> nid,
-                'address' => $request-> address,
-                'date' => $request-> date,
-                'salary' => $request-> salary,
+        $sup -> update([
+            'shop_name' => $request-> shop_name,
+            'email' => $request-> email,
+            'phone' => $request-> phone,
+            'address' => $request-> address,
             ]);
 
     }

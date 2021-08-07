@@ -1,7 +1,7 @@
 <template>
     <div class="create" >
         <div class="row" style="padding: 8px">
-            <router-link to="/all-employee" class="btn btn-primary">All Employee</router-link>
+            <router-link to="/all-supplier" class="btn btn-primary">All Supplier</router-link>
         </div>
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
@@ -11,14 +11,14 @@
                             <div class="col-lg-12">
                                 <div class="login-form">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Add Employee</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Add Supplier</h1>
                                     </div>
-                                    <form @submit.prevent="empInsert" enctype="multipart/form-data">
+                                    <form @submit.prevent="supInsert" enctype="multipart/form-data">
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-md-6">
-                                                    <input v-model="form.name" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Full Name">
-                                                    <small class="text-danger" v-if="errors.name">{{errors.name[0]}}</small>
+                                                    <input v-model="form.shop_name" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Full Name">
+                                                    <small class="text-danger" v-if="errors.shop_name">{{errors.shop_name[0]}}</small>
                                                 </div>
 
                                                 <div class="col-md-6">
@@ -34,25 +34,9 @@
                                                     <small class="text-danger" v-if="errors.address">{{errors.address[0]}}</small>
                                                 </div>
 
-                                                <div class="col-md-6">
-                                                    <input v-model="form.salary" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Salary">
-                                                    <small class="text-danger" v-if="errors.salary">{{errors.salary[0]}}</small>
-                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-md-6">
-                                                    <input v-model="form.date" type="date" class="form-control" id="exampleInputFirstName">
-                                                    <small class="text-danger" v-if="errors.date">{{errors.date[0]}}</small>
-                                                </div>
 
-                                                <div class="col-md-6">
-                                                    <input v-model="form.nid" type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter Your Nid">
-                                                    <small class="text-danger" v-if="errors.nid">{{errors.nid[0]}}</small>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-md-6">
@@ -108,12 +92,9 @@ export default {
     data(){
         return {
             form:{
-                name:null,
+                shop_name:null,
                 email:null,
                 address:null,
-                date:null,
-                nid:null,
-                salary:null,
                 phone:null,
                 photo:null,
             },
@@ -136,10 +117,10 @@ export default {
                 reader.readAsDataURL(file);
             }
             },
-        empInsert(){
-            axios.post('api/store',this.form)
+        supInsert(){
+            axios.post('api/sup-store',this.form)
             .then(() =>{
-                this.$router.push({name: '/all-employee'})
+                this.$router.push({name: '/all-supplier'})
                 Notification.success()
             })
             .catch(error => this.errors = error.response.data.errors)
